@@ -1,0 +1,69 @@
+import React, { useState} from 'react'
+import './stylesheets/calendar.css';
+import Cell from './Cell'
+
+function Calendar(props){
+    const weekday = new Array(7);
+    weekday[0] = "Sunday"; weekday[1] = "Monday"; weekday[2] = "Tuesday"; weekday[3] = "Wednesday";weekday[4] = "Thursday";weekday[5] = "Friday"; weekday[6] = "Saturday";
+    const months = new Array(12);
+    months[0] = "January"; months[1] = "February"; months[2] = "March"; months[3] = "April"; months[4] = "May"; months[5] = "June"; months[6] = "July"; months[7] = "August"; months[8] = "September"; months[9] = "October"; months[10] = "November"; months[11] = "December";
+    const [currentMonth, setCurrentMonth] = useState(new Date().getMonth());
+    const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
+
+    function renderCalendar(){
+        let key=0;
+        const monthMaxDays = new Date(currentYear, currentMonth+1, 0).getDate();
+        let calendarCells = [];
+        const prevMonthMaxDays = new Date(currentYear, currentMonth, 0).getDate();
+        for(let i = weekday.indexOf(new Date(currentYear, currentMonth%12, 1).toLocaleString('en-us', {  weekday: 'long' }))-1; i >=0 ; i--){
+            calendarCells.push(<Cell key={key++} weightMap={props.weightMap} setWeightMap={props.setWeightMap} date={new Date(currentYear, currentMonth-1, prevMonthMaxDays-i)} day={prevMonthMaxDays-i} color="blue"></Cell>);
+        }
+        for(let i = 1; i <= monthMaxDays; i++){
+            calendarCells.push(<Cell key={key++} weightMap={props.weightMap} setWeightMap={props.setWeightMap} date={new Date(currentYear, currentMonth, i)} day={i} color="gray"></Cell>)
+        }
+        let currentLength = calendarCells.length;
+        for(let i = 1; i <= 42 - currentLength; i++){
+            calendarCells.push(<Cell key={key++} weightMap={props.weightMap} setWeightMap={props.setWeightMap} date={new Date(currentYear, currentMonth, monthMaxDays+i)} day={i} color="blue"></Cell>)
+        }
+        const calendar = chunk(calendarCells, 7).map(arr => <tr key={key++}>{arr}</tr> ); 
+        return calendar;
+    }
+    function chunk(arr, chunkSize) {
+        var R = [];
+        for (var i=0,len=arr.length; i<len; i+=chunkSize)
+          R.push(arr.slice(i,i+chunkSize));
+        return R;
+    }
+    return(
+        <div className="calendar-wrap">
+            <button onClick={() => {
+                setCurrentMonth(new Date(currentYear, currentMonth, 0).getMonth())
+                setCurrentYear(currentMonth === 0 ? currentYear-1 : currentYear);
+            }}>Prev</button>
+            <button onClick={() => {
+                setCurrentMonth(new Date(currentYear, currentMonth+2, 0).getMonth())
+                setCurrentYear(currentMonth === 11 ? currentYear+1 : currentYear);
+            }}>Next</button>
+            <div>{months[currentMonth%12]}  {currentYear}</div>
+            <div className="calendar">
+                <table id="dataTable">
+                    <thead>
+                        <tr>
+                            <th>Sunday</th>
+                            <th>Monday</th>
+                            <th>Tuesday</th>
+                            <th>Wendnesday</th>
+                            <th>Thursday</th>
+                            <th>Friday</th>
+                            <th>Saturday</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {renderCalendar()}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    )
+}
+export default Calendar;

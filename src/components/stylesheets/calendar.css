@@ -1,0 +1,28 @@
+.calendar-wrap{
+    height:100%;
+    max-width: 105vh;
+    margin: auto;
+
+}
+.calendar{
+    margin-top:30%;
+    width: 100%;
+}
+#dataTable {
+    table-layout: fixed;
+    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+    border: 3px solid black;
+    width:105vh;
+    max-height:100%;
+    overflow:hidden;
+}
+#dataTable > tbody > tr, #dataTable > thead > tr > th{
+    background-color:lightblue;
+    font-size: 1vw;
+}
+.Cell{
+    border: 1px solid red;
+    padding: 4px;
+    text-align: left;
+    height:14vh;
+  }
